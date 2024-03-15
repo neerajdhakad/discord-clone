@@ -116,6 +116,7 @@ const MembersModal = () => {
                 </div>
                 <p className="text-xs text-zinc-500">{member.profile.email}</p>
               </div>
+              {/* member is not Admin  */}
               {server.profileId !== member.profileId &&
                 loadingId !== member.id && (
                   <div className="ml-auto">
