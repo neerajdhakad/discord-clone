@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { channelType } from "@prisma/client";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z
@@ -48,17 +49,19 @@ const formSchema = z.object({
 });
 
 const CreateChannelModal = () => {
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
+
+  const { ChannelType } = data;
   const router = useRouter();
   const params = useParams();
 
-  const isModalOpen = isOpen && type === "createChannel";
+  const isModalOpen = isOpen && type === "createChannel"; 
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType.TEXT,
+      type: ChannelType || channelType.TEXT,
     },
   });
 
@@ -85,6 +88,14 @@ const CreateChannelModal = () => {
     form.reset();
     onClose();
   };
+
+  useEffect(() => {
+    if (ChannelType) {
+      form.setValue("type", ChannelType);
+    } else {
+      form.setValue("type", channelType.AUDIO);
+    }
+  }, [ChannelType, form]);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
